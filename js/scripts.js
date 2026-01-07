@@ -7,20 +7,89 @@ class Calculator {
     this.previousOperationText = previousOperationText;
     this.currentOperationText = currentOperationText;
     this.currentOperation = "";
+    this.maxDigits = 15;
+    this.resetNext = false; // A nossa "bandeirinha" de reset
   }
 
-  // 1. Adiciona dígitos 🔢
+  // --- Funções Auxiliares (Formatação e Visual) ---
+
+  // Formata com vírgulas (123456 vir 123,456)
+  formatDisplayNumber(numberString) {
+    if (numberString === "") return "";
+    let [integer, decimal] = numberString.split(".");
+    integer = Number(integer).toLocaleString("en-US");
+    if (decimal !== undefined) {
+        return `${integer}.${decimal}`;
+    } else {
+        return integer;
+    }
+  }
+
+  // Ajusta o tamanho da fonte
+  adjustFontSize(element, textLength) {
+      element.style.removeProperty('font-size');
+      if (textLength > 18) {
+          element.style.fontSize = "1.3rem";
+      } else if (textLength > 13) {
+          element.style.fontSize = "1.8rem";
+      } else if (textLength > 10) {
+          element.style.fontSize = "2.5rem";
+      } 
+  }
+
+  // Mostra o balãozinho vermelho
+  showWarning() {
+      const oldToast = document.querySelector('.toast-warning');
+      if(oldToast) oldToast.remove();
+
+      const toast = document.createElement('div');
+      toast.className = 'toast-warning'; 
+      toast.innerText = `Can't enter more than ${this.maxDigits} digits.`;
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+          toast.classList.add('show');
+      }, 10);
+
+      setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 400);
+      }, 3000);
+  }
+
+  // --- Lógica Principal ---
+
   addDigit(digit) {
-    if (digit === "." && this.currentOperationText.innerText.includes(".")) {
+    // 🔥 CORREÇÃO PRINCIPAL AQUI:
+    // Se a conta acabou (resetNext é true), limpa tudo antes de por o número novo
+    if(this.resetNext) {
+        this.currentOperationText.innerText = "";
+        this.previousOperationText.innerText = "";
+        this.resetNext = false; // Desliga o reset
+    }
+
+    let currentRawValue = this.currentOperationText.innerText.replace(/,/g, '');
+
+    if (digit === "." && currentRawValue.includes(".")) {
       return;
+    }
+
+    if (currentRawValue.replace('.', '').length >= this.maxDigits && this.currentOperationText.innerText !== "0") {
+        this.showWarning();
+        return;
     }
 
     this.currentOperation = digit;
     this.updateScreen();
   }
 
-  // 2. Processa as operações ⚙️
   processOperation(operation) {
+    // Se apertar OPERAÇÃO (+ - * /) logo depois do resultado, 
+    // a gente NÃO reseta, a gente continua a conta com o resultado.
+    if(this.resetNext && operation !== "C" && operation !== "CE") {
+        this.resetNext = false;
+    }
+
     if (this.currentOperationText.innerText === "" && operation !== "C") {
       if (this.previousOperationText.innerText !== "") {
         this.changeOperation(operation);
@@ -29,8 +98,8 @@ class Calculator {
     }
 
     let operationValue;
-    const previous = +this.previousOperationText.innerText.split(" ")[0];
-    const current = +this.currentOperationText.innerText;
+    const previous = +this.previousOperationText.innerText.split(" ")[0].replace(/,/g, '');
+    const current = +this.currentOperationText.innerText.replace(/,/g, '');
 
     switch (operation) {
       case "+":
@@ -66,7 +135,6 @@ class Calculator {
     }
   }
 
-  // 3. Atualiza a tela (Onde o zero morre!) 🖥️
   updateScreen(
     operationValue = null,
     operation = null,
@@ -74,28 +142,31 @@ class Calculator {
     previous = null
   ) {
     if (operationValue === null) {
-      // ✅ REGRA: Se tiver "0" e digitar outro número, substitui!
-      if (this.currentOperationText.innerText === "0" && this.currentOperation !== ".") {
-        this.currentOperationText.innerText = this.currentOperation;
+      let rawValue = this.currentOperationText.innerText.replace(/,/g, '');
+
+      if (rawValue === "0" && this.currentOperation !== ".") {
+        rawValue = this.currentOperation;
       } else {
-        this.currentOperationText.innerText += this.currentOperation;
+        rawValue += this.currentOperation;
       }
+
+      this.currentOperationText.innerText = this.formatDisplayNumber(rawValue);
+      this.adjustFontSize(this.currentOperationText, this.currentOperationText.innerText.length);
+
     } else {
       if (previous === 0) {
         operationValue = current;
       }
 
-      // ✅ REGRA: Duas casas decimais se tiver ponto
-      if (String(operationValue).includes(".")) {
-        operationValue = parseFloat(operationValue.toFixed(2));
-      }
+      let resultString = operationValue.toLocaleString("en-US", { maximumFractionDigits: 10 });
 
-      this.previousOperationText.innerText = `${operationValue} ${operation}`;
+      this.previousOperationText.innerText = `${resultString} ${operation}`;
       this.currentOperationText.innerText = "";
+      
+      this.currentOperationText.style.removeProperty('font-size');
     }
   }
 
-  // 4. Troca de operação
   changeOperation(operation) {
     const mathOperations = ["*", "/", "+", "-"];
     if (!mathOperations.includes(operation)) return;
@@ -104,32 +175,41 @@ class Calculator {
       this.previousOperationText.innerText.slice(0, -1) + operation;
   }
 
-  // 5. Deleta dígito
   processDelOperator() {
-    this.currentOperationText.innerText =
-      this.currentOperationText.innerText.slice(0, -1);
+    let rawValue = this.currentOperationText.innerText.replace(/,/g, '').slice(0, -1);
+    if(rawValue === "") rawValue = "0";
+    this.currentOperationText.innerText = this.formatDisplayNumber(rawValue);
+    this.adjustFontSize(this.currentOperationText, this.currentOperationText.innerText.length);
   }
 
-  // 6. Limpa atual
   processClearCurrentOperation() {
-    this.currentOperationText.innerText = "";
+    this.currentOperationText.innerText = "0";
+    this.adjustFontSize(this.currentOperationText, 1);
   }
 
-  // 7. Limpa tudo
   processClearAllOperation() {
-    this.currentOperationText.innerText = "";
+    this.currentOperationText.innerText = "0";
     this.previousOperationText.innerText = "";
+    this.resetNext = false; // Garante que limpou o estado de reset também
+    this.adjustFontSize(this.currentOperationText, 1);
   }
 
-  // 8. Botão de Igual
   processEqualOperator() {
     let operation = this.previousOperationText.innerText.split(" ")[1];
+    
+    // Se não tiver operação definida, não faz nada
+    if(!operation) return;
+
     this.processOperation(operation);
     
-    // Mostra o resultado final embaixo e limpa em cima
     let finalResult = this.previousOperationText.innerText.split(" ")[0];
     this.currentOperationText.innerText = finalResult;
     this.previousOperationText.innerText = "";
+
+    this.adjustFontSize(this.currentOperationText, finalResult.length);
+    
+    // 🔥 AQUI ESTAVA FALTANDO: Liga a bandeirinha de reset!
+    this.resetNext = true; 
   }
 }
 

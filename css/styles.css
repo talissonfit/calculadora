@@ -1,66 +1,77 @@
-/* 1. RESET GERAL */
+/* =========================================
+   1. CONFIGURAÇÕES GERAIS E IMPORTAÇÃO
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif; 
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased; /* Deixa a fonte mais nítida no Mac/iOS */
 }
 
-/* 2. CORPO DA PÁGINA */
 body {
-    background-color: #e0e5ec;
-    display: flex;
-    flex-direction: column; 
-    align-items: center;     
-    justify-content: center; 
-    min-height: 100vh;
-    overflow: hidden;        
-}
-
-/* 3. PARTE DE CIMA (LINKS E NOME) */
-#top-info {
-    text-align: center; 
-    margin-bottom: 30px; 
+    background-color: #e0e5ec; /* Cinza suave */
     display: flex;
     flex-direction: column;
-    align-items: center; 
-}
-
-/* SEU NOME - AGORA ALINHADO MILIMETRICAMENTE */
-#top-info p {
-    margin-bottom: 25px;     
-    font-size: 0.95rem;      
-    font-weight: 700;        
-    color: #2d3436;          
-    text-transform: uppercase; 
-    
-    /* O SEGREDO DO ALINHAMENTO PERFEITO 👇 */
-    letter-spacing: 3px;     /* Espaço entre letras */
-    text-indent: 3px;        /* Empurra o começo para compensar o final */
-    
-    border-bottom: 2px solid #ff9f0a; 
-    padding-bottom: 5px;     
-}
-
-.social-links {
-    display: flex;       /* Garante que fiquem em linha */
-    justify-content: center; /* Centraliza o grupo */
     align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden; /* Evita barras de rolagem indesejadas */
 }
 
-.social-links a { text-decoration: none; }
+/* =========================================
+   2. CABEÇALHO (NOME E REDES SOCIAIS)
+   ========================================= */
+#top-info {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 320px;
+}
 
-/* ÍCONES COM LARGURA FIXA (Para ficarem simétricos) */
+/* Estilo do Nome */
+#top-info p {
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #4a4a4a;
+    text-transform: uppercase;
+    letter-spacing: 4px; /* Espaçamento chique entre letras */
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ff9f0a; /* Linha laranja sutil */
+    display: inline-block;
+    width: 100%;
+}
+
+/* Container dos Ícones */
+.social-links {
+    display: flex;
+    justify-content: space-between; /* Espalha os ícones igualmente */
+    padding: 0 10px;
+}
+
+.social-links a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ícones */
 .social-links i {
-    width: 50px;         /* Cada ícone ocupa o mesmo espaço invisível */
-    text-align: center;  /* O desenho fica no meio desse espaço */
-    font-size: 50px;
-    
-    /* Removemos a margem lateral e usamos o width para espaçar */
-    margin: 0;           
-    
-    transition: 0.3s;
-    cursor: pointer;
+    font-size: 28px; /* Tamanho equilibrado */
+    transition: all 0.3s ease;
+    filter: grayscale(100%); /* Começa preto e branco (opcional, fica elegante) */
+    opacity: 0.6;
+}
+
+/* Cores originais ao passar o mouse */
+.social-links a:hover i {
+    transform: translateY(-5px); /* Flutua ao passar o mouse */
+    filter: grayscale(0%); /* Revela a cor */
+    opacity: 1;
 }
 
 .fa-instagram { color: #E1306C; }
@@ -68,72 +79,165 @@ body {
 .fa-linkedin  { color: #0077B5; }
 .fa-envelope  { color: #D44638; }
 
-.social-links i:hover { transform: translateY(-3px) scale(1.1); }
-
-/* 4. CALCULADORA */
+/* =========================================
+   3. CALCULADORA (CONTAINER)
+   ========================================= */
 #calc {
-    width: 320px;
-    padding: 20px;
+    width: 340px; /* Um pouco mais largo para conforto */
     background-color: #000000;
-    color: white;
+    padding: 25px;
+    border-radius: 40px; /* Bordas bem arredondadas estilo iOS */
+    box-shadow: 
+        0 20px 50px rgba(0,0,0,0.3), /* Sombra longa */
+        0 5px 15px rgba(0,0,0,0.5);  /* Sombra curta */
     display: flex;
     flex-direction: column;
-    border-radius: 35px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4); 
+    justify-content: flex-end; /* Empurra botões para baixo se sobrar espaço */
 }
 
 #calc h3 { display: none; }
 
-/* 5. TELA DA CALCULADORA */
+/* =========================================
+   4. VISOR DA CALCULADORA
+   ========================================= */
 #operations {
     text-align: right;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 120px; /* Altura fixa para o visor não pular */
 }
 
 #previous-operation {
-    color: #777;
-    font-size: 1em;
-    min-height: 1em;
+    color: #a5a5a5;
+    font-size: 1.2rem;
+    min-height: 1.5rem;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #current-operation {
-    font-size: 3.5em;
+    color: #ffffff;
+    font-size: 3.5rem; /* Tamanho base grande */
     font-weight: 300;
-    color: #fff;
-    min-height: 1.2em;
+    line-height: 1;
+    min-height: 4rem;
+    
+    /* Garante que o texto não quebre linha */
+    white-space: nowrap;
+    overflow: hidden;
+    /* O JS vai ajustar o font-size, aqui garantimos o alinhamento */
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
-/* 6. BOTÕES */
+/* =========================================
+   5. BOTÕES
+   ========================================= */
 #buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr); /* 4 colunas iguais */
+    gap: 12px; /* Espaço entre botões */
 }
 
 #buttons-container button {
-    height: 60px;
-    width: 60px;
-    font-size: 1.4em;
+    height: 65px;
+    width: 65px;
+    font-size: 1.5rem;
+    font-weight: 500;
     cursor: pointer;
     border: none;
-    border-radius: 50%;
-    transition: filter 0.2s;
-    background-color: #ff9f0a; 
+    border-radius: 50%; /* Círculo perfeito */
+    background-color: #ff9f0a; /* Laranja padrão */
     color: white;
-    margin: auto; 
+    transition: filter 0.2s;
+    
+    /* Centraliza o botão na célula do grid */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
 }
 
-#buttons-container .number {
+/* Botões numéricos e ponto */
+#buttons-container .number, 
+#buttons-container button:contains(".") {
     background-color: #333333;
-    color: #fff;
 }
 
+/* Botões de Ação Topo (C, CE, DEL) - Opcional: deixá-los cinza claro igual iOS */
+/* Se quiser cinza claro, descomente abaixo e troque a cor do texto para preto */
+/*
+#buttons-container button:nth-child(-n+3) {
+    background-color: #a5a5a5;
+    color: black;
+}
+*/
+
+#buttons-container button:active {
+    filter: brightness(1.3); /* Efeito de clique */
+}
+
+/* Botão Igual (=) */
 #buttons-container #equal-btn {
-    grid-column: span 2;
-    width: 100%;
-    border-radius: 40px;
-    background-color: #ff9f0a;
+    grid-column: span 2; /* Ocupa 2 espaços */
+    width: 100%; /* Estica para preencher */
+    border-radius: 40px; /* Vira uma pílula */
+    justify-content: center;
 }
 
-#buttons-container button:active { filter: brightness(1.3); }
+Entendi! Vamos criar um efeito "balãozinho" (balloon pop-up) que é muito usado em interfaces modernas.
+
+Para fazer ele subir suavemente na cor vermelha e depois sumir, o segredo é combinar a opacidade (opacity) com a transformação de posição (transform translate).
+
+Substitua a parte do .toast-warning no seu CSS por este código novo. Não precisa mexer no Javascript, ele vai funcionar automaticamente com esse novo estilo.
+
+🎨 Atualize seu CSS (Copie e cole isso no lugar do antigo .toast-warning)
+CSS
+
+/* =========================================
+   6. AVISO FLUTUANTE (EFEITO BALÃO VERMELHO) 🎈
+   ========================================= */
+.toast-warning {
+    position: fixed;
+    bottom: 110px;       /* Posição final na tela */
+    left: 50%;
+    
+    /* ESTADO INICIAL (Antes de aparecer) */
+    /* -50% no X: centraliza horizontalmente */
+    /* 50px no Y: começa 50px mais para baixo (para subir depois) */
+    /* scale(0.9): começa um pouquinho menor */
+    transform: translate(-50%, 50px) scale(0.9);
+    
+    background-color: #ef4444; /* Vermelho Profissional (Red-500) */
+    color: #ffffff;            /* Texto branco */
+    
+    padding: 12px 25px;        /* Espaçamento interno */
+    border-radius: 50px;       /* Formato de pílula arredondada */
+    
+    font-size: 0.9rem;
+    font-weight: 600;          /* Texto um pouco mais grosso */
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4); /* Sombra avermelhada difusa */
+    
+    z-index: 2000;             /* Garante que fique em cima de tudo */
+    pointer-events: none;      /* O clique passa direto por ele */
+    
+    /* ANIMAÇÃO SUAVE */
+    opacity: 0;                /* Começa invisível */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efeito elástico (bouncy) */
+}
+
+/* CLASSE QUE ATIVA O EFEITO (JavaScript adiciona essa classe) */
+.toast-warning.show {
+    opacity: 1;                /* Fica visível */
+    
+    /* MOVIIMENTO: */
+    /* Volta para a posição 0 no eixo Y (faz ele subir os 50px) */
+    /* Volta para escala 1 (tamanho normal) */
+    transform: translate(-50%, 0) scale(1);
+}
