@@ -1,6 +1,6 @@
 const previousOperationText = document.querySelector("#previous-operation")
-const currentOperationText = document.querySelector("#current-operation") // Corrigido #
-const buttons = document.querySelectorAll("#buttons-container button") // Corrigido para plural
+const currentOperationText = document.querySelector("#current-operation")
+const buttons = document.querySelectorAll("#buttons-container button") 
 
 class Calculator {
     constructor(previousOperationText, currentOperationText) {
@@ -53,22 +53,20 @@ class Calculator {
                 operationValue = previous / current
                 this.updateScreen(operationValue, operation, current, previous);
                 break;
+            // ...restante do código acima
             case "DEL":
-                operationValue = previous / current
-                this.processDelOperator();
+                this.processDelOperator(); // Sem conta matemática aqui!
                 break;
             case "CE":
-                operationValue = previous / current
                 this.processClearCurrentOperation();
                 break;
             case "C":
-                operationValue = previous / current
                 this.processClearOperation();
                 break;
             case "=":
-                operationValue = previous / current
                 this.processEqualOperator();
                 break;
+            // ...
             default:
                 return;
                 
@@ -128,11 +126,25 @@ class Calculator {
 
     // Process all operation
     processEqualOperator() {
-
+        // 1. Faz a conta normal (igual fazia antes)
         const operation = previousOperationText.innerText.split(" ")[1];
         this.processOperation(operation);
 
+        // 2. O TRUQUE MÁGICO ✨
+        // Pega o resultado que ficou lá em cima (pequeno) e traz para baixo
+        const result = this.previousOperationText.innerText.split(" ")[0];
+
+        // Mostra no visor grande
+        this.currentOperationText.innerText = result;
+
+        // Limpa o visor de cima (tira o sinal e o número antigo)
+        this.previousOperationText.innerText = "";
+
+        // Atualiza a memória da calculadora para continuar a conta
+        this.currentOperation = result;
     }
+
+    
  }
 
 const calc = new Calculator(previousOperationText, currentOperationText);
@@ -146,5 +158,31 @@ buttons.forEach((btn) => { // Agora coincide com a variável do topo
             calc.processOperation(value);
             
         }
+    // ... código anterior dos botões ...
     }) 
 })
+
+// EVENTOS DE TECLADO (COLE NO FINAL DO ARQUIVO JS)
+window.addEventListener("keydown", (e) => {
+    const value = e.key;
+
+    if(+value >= 0 || value === ".") {
+        calc.addDigit(value);
+    } 
+    else if(value === "Enter") {
+        e.preventDefault(); // <--- ISSO IMPEDE O ENTER DE "CLICAR" EM OUTRA COISA
+        calc.processOperation("="); 
+    } 
+    else if(value === "Backspace") {
+        calc.processOperation("DEL"); 
+    } 
+    else if(value === "Escape") { 
+        calc.processOperation("C");
+    } 
+    else if(value === "," || value === ".") {
+        calc.addDigit(".");
+    }
+    else {
+        calc.processOperation(value);
+    }
+});

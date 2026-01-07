@@ -1,85 +1,139 @@
+/* 1. RESET GERAL */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica;
+    font-family: 'Montserrat', sans-serif; 
 }
 
+/* 2. CORPO DA PÁGINA */
 body {
-    background-color: #333;
+    background-color: #e0e5ec;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3em;
+    flex-direction: column; 
+    align-items: center;     
+    justify-content: center; 
+    min-height: 100vh;
+    overflow: hidden;        
 }
 
-#calc {
-    width: 400px;
-    padding: .5em;
-    background-color: #c4c4c4;
-    color: #000;
+/* 3. PARTE DE CIMA (LINKS E NOME) */
+#top-info {
+    text-align: center; 
+    margin-bottom: 30px; 
     display: flex;
     flex-direction: column;
+    align-items: center; 
 }
 
-#calc h3 {
-    font-size: .8em;
-    font-weight: 300;
-    color: #666;
+/* SEU NOME - AGORA ALINHADO MILIMETRICAMENTE */
+#top-info p {
+    margin-bottom: 25px;     
+    font-size: 0.95rem;      
+    font-weight: 700;        
+    color: #2d3436;          
+    text-transform: uppercase; 
+    
+    /* O SEGREDO DO ALINHAMENTO PERFEITO 👇 */
+    letter-spacing: 3px;     /* Espaço entre letras */
+    text-indent: 3px;        /* Empurra o começo para compensar o final */
+    
+    border-bottom: 2px solid #ff9f0a; 
+    padding-bottom: 5px;     
 }
 
-#operations {
-    text-align: right;
+.social-links {
+    display: flex;       /* Garante que fiquem em linha */
+    justify-content: center; /* Centraliza o grupo */
+    align-items: center;
 }
 
-#previous-operation,
-#current-operation {
-    min-height: 1.6em;
-    padding: .2em;
-    overflow-wrap: break-word;
-}
+.social-links a { text-decoration: none; }
 
-
-
-
-#previous-operation {
-    color: #777;
-}
-
-#current-operation {
-    font-size: 3em;
-    font-weight: 700;
-}
-
-#buttons-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 3px;
-}
-
-#buttons-container button {
-    border: 1px solid transparent;
-    border-radius: 0;
-    height: 4em;
-    font-size: 1.2em;
-    background-color: #dbdbdb;
+/* ÍCONES COM LARGURA FIXA (Para ficarem simétricos) */
+.social-links i {
+    width: 50px;         /* Cada ícone ocupa o mesmo espaço invisível */
+    text-align: center;  /* O desenho fica no meio desse espaço */
+    font-size: 50px;
+    
+    /* Removemos a margem lateral e usamos o width para espaçar */
+    margin: 0;           
+    
+    transition: 0.3s;
     cursor: pointer;
 }
 
-#buttons-container .number{
-    background-color: #f3f3f3;
+.fa-instagram { color: #E1306C; }
+.fa-whatsapp  { color: #25D366; }
+.fa-linkedin  { color: #0077B5; }
+.fa-envelope  { color: #D44638; }
+
+.social-links i:hover { transform: translateY(-3px) scale(1.1); }
+
+/* 4. CALCULADORA */
+#calc {
+    width: 320px;
+    padding: 20px;
+    background-color: #000000;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    border-radius: 35px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4); 
 }
 
-#buttons-container button:hover{
-    background-color: #bababa;
-    border-color: #999;
+#calc h3 { display: none; }
+
+/* 5. TELA DA CALCULADORA */
+#operations {
+    text-align: right;
+    margin-bottom: 15px;
+    padding: 0 10px;
 }
 
-#buttons-container #equal-btn{
+#previous-operation {
+    color: #777;
+    font-size: 1em;
+    min-height: 1em;
+}
+
+#current-operation {
+    font-size: 3.5em;
+    font-weight: 300;
+    color: #fff;
+    min-height: 1.2em;
+}
+
+/* 6. BOTÕES */
+#buttons-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+#buttons-container button {
+    height: 60px;
+    width: 60px;
+    font-size: 1.4em;
+    cursor: pointer;
+    border: none;
+    border-radius: 50%;
+    transition: filter 0.2s;
+    background-color: #ff9f0a; 
+    color: white;
+    margin: auto; 
+}
+
+#buttons-container .number {
+    background-color: #333333;
+    color: #fff;
+}
+
+#buttons-container #equal-btn {
     grid-column: span 2;
-    background-color: #75a5cb;
+    width: 100%;
+    border-radius: 40px;
+    background-color: #ff9f0a;
 }
 
-#buttons-container #equal-btn:hover {
-    background-color: #3a91d8;
-}
+#buttons-container button:active { filter: brightness(1.3); }

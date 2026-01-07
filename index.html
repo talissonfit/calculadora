@@ -1,40 +1,220 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JS CALCULADORA</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <title>Calculadora Pro</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="js/scripts.js" defer></script>
+
+    <style>
+        /* --- RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- CORPO (FUNDO CLARO AGORA) --- */
+        body {
+            background-color: #e0e5ec; /* <--- O CINZA CLARO QUE VOCÊ QUERIA */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- CONTAINER MESTRE (Mantém tudo alinhado) --- */
+        .container {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- PARTE DE CIMA (TOPO) --- */
+        #top-info {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #ccc; /* Linha divisória cinza */
+            padding-bottom: 25px;
+        }
+
+        #top-info p {
+            margin-bottom: 20px;
+            font-size: 1.3rem; 
+            /* Mudei a cor para ESCURO para aparecer no fundo claro */
+            color: #444; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        #top-info strong {
+            /* O Nome fica Preto bem forte ou Laranja, escolhi Preto para destacar */
+            color: #000; 
+            font-weight: 800; 
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .social-links a { text-decoration: none; }
+
+        /* ÍCONES GRANDES */
+        .social-links i {
+            font-size: 40px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        /* CORES DAS LOGOS */
+        .fa-instagram { color: #E1306C; }
+        .fa-whatsapp  { color: #25D366; }
+        .fa-linkedin  { color: #0077B5; }
+        .fa-envelope  { color: #ea4335; }
+
+        .social-links i:hover { transform: scale(1.1); }
+
+        /* --- CALCULADORA (PRETA) --- */
+        #calc {
+            width: 100%;
+            background-color: #000; /* Calculadora Preta */
+            padding: 20px;
+            border-radius: 30px;
+            /* Sombra suave para destacar do fundo claro */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+
+        #calc h3 { display: none; }
+
+        /* Visor */
+        #operations {
+            text-align: right;
+            margin-bottom: 20px;
+            padding: 0 10px;
+            color: #fff;
+        }
+
+        #previous-operation {
+            min-height: 1.2rem;
+            font-size: 1rem;
+            color: #777;
+        }
+
+        #current-operation {
+            min-height: 3rem;
+            font-size: 3rem;
+            font-weight: 400;
+        }
+
+        /* Botões */
+        #buttons-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            height: 60px;
+            width: 60px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: filter 0.2s;
+            margin: auto;
+        }
+
+        /* Cores dos Botões */
+        .number {
+            background-color: #333;
+            color: #fff;
+        }
+        
+        button:not(.number) {
+            background-color: #ff9f0a; /* Laranja */
+            color: #fff;
+        }
+
+        /* Botões Cinza Claro (CE, C, DEL) */
+        button:nth-child(1),
+        button:nth-child(2),
+        button:nth-child(3) {
+            background-color: #a5a5a5;
+            color: #000;
+        }
+
+        #equal-btn {
+            grid-column: span 2;
+            width: 100%;
+            border-radius: 40px;
+            background-color: #ff9f0a;
+        }
+
+        button:active { filter: brightness(1.3); }
+
+    </style>
 </head>
 <body>
-    <div id="calc">
-        <h3>Calculadora</h3>
-        <div id="operations">
-            <div id="previous-operation"></div>
-            <div id="current-operation"></div>
+
+    <div class="container">
+
+        <div id="top-info">
+            <p>Desenvolvido por <strong style="color: #ff9f0a;">Talisson Almeida</strong></p>
+            
+            <div class="social-links">
+                <a href="https://www.instagram.com/talissonfit/" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/5512991896488" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="mailto:talissonalmeida11@gmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="https://www.linkedin.com/in/almeidatalisson/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            </div>
         </div>
-        <div id="buttons-container">
-            <button>CE</button>
-            <button>C</button>
-            <button>DEL</button>
-            <button>/</button>
-            <button class="number">7</button>
-            <button class="number">8</button>
-            <button class="number">9</button>
-            <button>*</button>
-            <button class="number">4</button>
-            <button class="number">5</button>
-            <button class="number">6</button>
-            <button>-</button>
-            <button class="number">1</button>
-            <button class="number">2</button>
-            <button class="number">3</button>
-            <button>+</button>
-            <button class="number">0</button>
-            <button class="number">.</button>
-            <button id="equal-btn">=</button>
+
+        <div id="calc">
+            <h3>Calculadora</h3>
+            
+            <div id="operations">
+                <div id="previous-operation"></div>
+                <div id="current-operation"></div>
+            </div>
+            
+            <div id="buttons-container">
+                <button>CE</button>
+                <button>C</button>
+                <button>DEL</button>
+                <button>/</button>
+                <button class="number">7</button>
+                <button class="number">8</button>
+                <button class="number">9</button>
+                <button>*</button>
+                <button class="number">4</button>
+                <button class="number">5</button>
+                <button class="number">6</button>
+                <button>-</button>
+                <button class="number">1</button>
+                <button class="number">2</button>
+                <button class="number">3</button>
+                <button>+</button>
+                <button class="number">0</button>
+                <button class="number">.</button>
+                <button id="equal-btn">=</button>
+            </div>
         </div>
+
     </div>
+
 </body>
 </html>
